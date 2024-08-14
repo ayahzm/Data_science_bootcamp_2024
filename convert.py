@@ -7,7 +7,7 @@ json_file = r"D:\data science bootcamp '24\pythonProject\output\2024_08.json"
 
 print(f"Looking for the file at: {json_file}")
 
-# Checkong if the file exists
+# Checking if the file exists
 if os.path.exists(json_file):
     print("File found, loading...")
     with open(json_file, 'r', encoding='utf-8') as file:
