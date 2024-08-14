@@ -73,6 +73,10 @@ class SitemapParser:
 
             soup = BeautifulSoup(response.content, 'html.parser')
             script_tag = soup.find('script', {'type': 'text/tawsiyat'})
+
+            # Extract text from all <p> tags
+            full_text = ' '.join([p.get_text() for p in soup.find_all('p')])
+
             if script_tag:
                 # Extract full_text and parse as JSON
                 script_content = script_tag.string
@@ -89,7 +93,7 @@ class SitemapParser:
                             publication_date=article_data.get('published_time'),
                             last_updated_date=article_data.get('last_updated'),
                             author=article_data.get('author'),
-                            full_text=script_content
+                            full_text=full_text  # Assign text content from <p> tags
                         )
                         return article
                     except json.JSONDecodeError as e:
@@ -157,8 +161,8 @@ class FileUtility:
 
 def main():
     sitemap_url = 'https://www.almayadeen.net/sitemaps/all.xml'
-    output_dir = 'output'  # Directory to save JSON files
-    max_articles = 5000
+    output_dir = '../Data_science_bootcamp_Aya_Hazimeh/output/output'  # Directory to save JSON files
+    max_articles = 10000
     max_workers = 20
 
     parser = SitemapParser(sitemap_url, max_articles=max_articles, max_workers=max_workers)
