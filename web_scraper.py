@@ -7,19 +7,23 @@ from datetime import datetime
 import json
 import os
 
-
 @dataclass
 class Article:
     url: str
     post_id: Optional[str] = None
     title: Optional[str] = None
-    keywords: Optional[str] = None
+    keywords: Optional[List[str]] = None
     thumbnail: Optional[str] = None
     publication_date: Optional[str] = None
     last_updated_date: Optional[str] = None
     author: Optional[str] = None
     full_text: Optional[str] = None
-
+    classes: Optional[List[str]] = None
+    word_count: Optional[int] = None
+    description: Optional[str] = None
+    video_duration: Optional[str] = None
+    type: Optional[str] = None
+    lang: Optional[str] = None
 
 class SitemapParser:
     def __init__(self, sitemap_url: str, max_articles: int = 12000, max_workers: int = 10):
@@ -93,7 +97,13 @@ class SitemapParser:
                             publication_date=article_data.get('published_time'),
                             last_updated_date=article_data.get('last_updated'),
                             author=article_data.get('author'),
-                            full_text=full_text  # Assign text content from <p> tags
+                            full_text=full_text,  # Assign text content from <p> tags
+                            classes=article_data.get('classes', []),  # Assign default as empty list if not present
+                            word_count=article_data.get('word_count', len(full_text.split())),  # Calculate word count if not present
+                            description=article_data.get('description'),  # Assign description
+                            video_duration=article_data.get('video_duration'),  # New field
+                            type=article_data.get('type'),  # New field
+                            lang=article_data.get('lang')  # New field
                         )
                         return article
                     except json.JSONDecodeError as e:
@@ -152,7 +162,8 @@ class FileUtility:
 
         for year_month, articles_list in articles_by_date.items():
             year, month = (year_month.split('-') + ['Unknown'])[:2]
-            file_path = os.path.join(self.output_dir, f"{year}_{month}.json")
+            # Rename the file with the prefix 'articles_'
+            file_path = os.path.join(self.output_dir, f"articles_{year}_{month}.json")
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(articles_list, f, ensure_ascii=False, indent=4)
 
@@ -161,8 +172,8 @@ class FileUtility:
 
 def main():
     sitemap_url = 'https://www.almayadeen.net/sitemaps/all.xml'
-    output_dir = '../Data_science_bootcamp_Aya_Hazimeh/output/output'  # Directory to save JSON files
-    max_articles = 10000
+    output_dir = '../Data_science_bootcamp_Aya_Hazimeh/output'  # Directory to save JSON files
+    max_articles = 100
     max_workers = 20
 
     parser = SitemapParser(sitemap_url, max_articles=max_articles, max_workers=max_workers)
