@@ -29,3 +29,5 @@ D) Execution:
 The entire scraping process is encapsulated in a main function, which initializes the SitemapParser and FileUtility classes with appropriate parameters (like max_articles and max_workers).
 The function then begins the retrieval of article URLs, extraction of article data, and saving of the data to JSON files.
 Note: It also handles any exceptions that might occur during the process, ensuring a smooth and controlled execution.
+
+NOTE: i added a convert python file that has code that converts keyword attribute content from comma seperated strings to arrays of strings to be more organized as required from you.

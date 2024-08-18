@@ -1,3 +1,5 @@
+# this code converts keywords attribute in the json files from comma seperated strings to arrays.
+
 import json
 import os
 
