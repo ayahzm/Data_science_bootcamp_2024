@@ -1,4 +1,5 @@
 # this code converts keywords attribute in the json files from comma seperated strings to arrays.
+# it also converts word count fields from string to integer.
 
 import json
 import os
