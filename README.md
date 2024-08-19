@@ -34,7 +34,7 @@ This project aims to facilitate data analysis and research on news content from 
 - **Robust Error Handling**: Ensures smooth operation even when encountering network issues or unexpected page structures
 - **Configurable Limits**: Allows easy adjustment of scraping boundaries to suit different needs
 
-##  Presentations
+## 📹 Presentations
 below is the link to files in google drive containing the presentation videos :
 - Task 1 --> https://drive.google.com/file/d/1bKMB_NH6u7gsqxA88hTcwSsOmfhzJVGh/view?usp=drive_link
 - Task 2 --> https://drive.google.com/file/d/1cOmY_PFFeugUombv0RPzXiKYp_DB-Zg4/view?usp=drive_link
