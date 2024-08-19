@@ -14,6 +14,7 @@ A  web scraper designed to extract and analyze articles from the AlMayadeen news
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [Presentations](#-presentations)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [Contact](#-contact)
@@ -32,6 +33,10 @@ This project aims to facilitate data analysis and research on news content from 
 - **Structured Data Storage**: Organizes scraped data into year-month based JSON files
 - **Robust Error Handling**: Ensures smooth operation even when encountering network issues or unexpected page structures
 - **Configurable Limits**: Allows easy adjustment of scraping boundaries to suit different needs
+
+##  Presentations
+below is the link to a folder in google drive containing the presentation videos :
+https://drive.google.com/file/d/1bKMB_NH6u7gsqxA88hTcwSsOmfhzJVGh/view?usp=drive_link
 
 ## 🛣 Roadmap
 
