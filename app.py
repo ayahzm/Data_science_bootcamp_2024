@@ -23,7 +23,7 @@ def top_keywords():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Top Authors
+# Route for Top Authors --> bar chart
 @app.route('/top_authors', methods=['GET'])
 def top_authors():
     pipeline = [
@@ -35,7 +35,7 @@ def top_authors():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Date
+# Route for Articles by Date --> line chart
 @app.route('/articles_by_date', methods=['GET'])
 def articles_by_date():
     pipeline = [
@@ -65,7 +65,7 @@ def articles_by_date():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Word Count
+# Route for Articles by Word Count --> histogram
 @app.route('/articles_by_word_count', methods=['GET'])
 def articles_by_word_count():
     pipeline = [
@@ -76,7 +76,7 @@ def articles_by_word_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Language
+# Route for Articles by Language --> pie chart
 @app.route('/articles_by_language', methods=['GET'])
 def articles_by_language():
     pipeline = [
@@ -87,7 +87,7 @@ def articles_by_language():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Category
+# Route for Articles by Category --> Stacked Bar Chart
 @app.route('/articles_by_classes', methods=['GET'])
 def articles_by_classes():
     pipeline = [
@@ -108,18 +108,18 @@ def articles_by_classes():
     return jsonify(result)
 
 
-# Route for Recent Articles
+# Route for Recent Articles --> Table
 @app.route('/recent_articles', methods=['GET'])
 def recent_articles():
     pipeline = [
         {"$sort": {"publication_date": -1}},
         {"$limit": 10},
-        {"$project": {"_id": 0, "title": 1}}
+        {"$project": {"_id": 0, "title": 1, "author":1,"publication_date":1, "word_count":1, "description":1, }}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Keyword
+# Route for Articles by Keyword --> Tag Cloud
 @app.route('/articles_by_keyword/<keyword>', methods=['GET'])
 def articles_by_keyword(keyword):
     query = {"keywords": keyword}
@@ -127,15 +127,28 @@ def articles_by_keyword(keyword):
     result = list(collection.find(query, projection))
     return jsonify(result)
 
-# Route for Articles by Author
+# Route for Articles by Author --> Bar Chart
 @app.route('/articles_by_author/<author_name>', methods=['GET'])
 def articles_by_author(author_name):
     query = {"author": author_name}
     projection = {"_id": 0, "title": 1}
-    result = list(collection.find(query, projection))
-    return jsonify(result)
 
-# Route for Top Classes
+    # Find articles by the specific author
+    articles = list(collection.find(query, projection))
+
+    # Count the number of articles by the author
+    count = len(articles)
+
+    # Create the response object
+    response = {
+        "count": count,
+        "articles": articles
+    }
+
+    return jsonify(response)
+
+
+# Route for Top Classes --> Pie Chart
 @app.route('/top_classes', methods=['GET'])
 def top_classes():
     pipeline = [
@@ -157,7 +170,7 @@ def top_classes():
     return jsonify(result)
 
 
-# Route for Article Details
+# Route for Article Details --> Table
 @app.route('/article_details/<post_id>', methods=['GET'])
 def article_details(post_id):
     # Define the query to match the article by its postid
@@ -165,12 +178,14 @@ def article_details(post_id):
 
     # Define the fields to include in the response
     projection = {
-        "_id": 0,  # Exclude the MongoDB internal _id field
-        "url": 1,  # Include the article URL
-        "title": 1,  # Include the article title
+        "_id": 0,
+        "author":1,# Exclude the MongoDB internal _id field
+        "title": 1,
+        "word_count":1,
         "keywords": 1,  # Include the article keywords
         "publication_date": 1,  # Include the publication date
-        "content": 1  # Include the article content (assuming you need this as well)
+        "content": 1 ,
+        "url": 1# Include the article content (assuming you need this as well)
     }
 
     # Find the article document that matches the query
@@ -183,7 +198,7 @@ def article_details(post_id):
     return jsonify(result)
 
 
-# Route for Articles Containing Video
+# Route for Articles Containing Video --> Bar Chart
 @app.route('/articles_with_video', methods=['GET'])
 def articles_with_video():
     query = {"video_duration": {"$ne": None}}
@@ -191,7 +206,7 @@ def articles_with_video():
     result = list(collection.find(query, projection))
     return jsonify(result)
 
-# Route for Articles by Publication Year
+# Route for Articles by Publication Year --> Bar Chart
 @app.route('/articles_by_year/<year>', methods=['GET'])
 def articles_by_year(year):
     pipeline = [
@@ -200,9 +215,12 @@ def articles_by_year(year):
         {"$project": {"_id": 0, "year": year, "articles_count": "$count"}}
     ]
     result = list(collection.aggregate(pipeline))
+    # Ensure at least one result for the bar chart
+    if not result:
+        result = [{"year": year, "articles_count": 0}]
     return jsonify(result)
 
-# Route for Longest Articles
+# Route for Longest Articles --> Bar Chart
 @app.route('/longest_articles', methods=['GET'])
 def longest_articles():
     pipeline = [
@@ -213,7 +231,7 @@ def longest_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Shortest Articles
+# Route for Shortest Articles --> Bar Chart
 @app.route('/shortest_articles', methods=['GET'])
 def shortest_articles():
     pipeline = [
@@ -224,7 +242,7 @@ def shortest_articles():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Keyword Count
+# Route for Articles by Keyword Count --> Histogram
 @app.route('/articles_by_keyword_count', methods=['GET'])
 def articles_by_keyword_count():
     pipeline = [
@@ -236,23 +254,30 @@ def articles_by_keyword_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles with Thumbnail
+# Route for Articles with Thumbnail --> Pie Chart
 @app.route('/articles_with_thumbnail', methods=['GET'])
 def articles_with_thumbnail():
     query = {"thumbnail": {"$ne": None}}
-    projection = {"_id": 0, "title": 1}
-    result = list(collection.find(query, projection))
-    return jsonify(result)
+    article_count = collection.count_documents(query)
+    return jsonify({"count": article_count})
 
-# Route for Articles Updated After Publication
+# Route for Articles Updated After Publication --> Bar Chart
 @app.route('/articles_updated_after_publication', methods=['GET'])
 def articles_updated_after_publication():
-    query = {"$expr": {"$gt": ["last_updated_date", "$publication_date"]}}
+    query = {"$expr": {"$gt": ["$last_updated_date", "$publication_date"]}}
     projection = {"_id": 0, "title": 1}
     result = list(collection.find(query, projection))
-    return jsonify(result)
 
-# Route for Articles by Coverage
+    count = len(result)  # Get the count of articles
+    response_data = {
+        "titles": [article["title"] for article in result],  # Keep titles
+        "count": count  # Add count to response
+    }
+
+    return jsonify(response_data)
+
+
+# Route for Articles by Coverage -->  Stacked Bar Chart
 @app.route('/articles_by_coverage/<coverage>', methods=['GET'])
 def articles_by_coverage(coverage):
     # Define the query to match articles where class5's value equals the given coverage
@@ -264,10 +289,21 @@ def articles_by_coverage(coverage):
     # Find the articles that match the query
     result = list(collection.find(query, projection))
 
-    return jsonify(result)
+    # Get the count of articles
+    count = len(result)
+
+    # Return the titles and the count
+    response_data = {
+        "titles": [article["title"] for article in result],
+        "count": count,
+        "coverage": coverage  # Include coverage name for the chart
+    }
+
+    return jsonify(response_data)
 
 
-# Route for Popular Keywords in the Last X Days
+
+# Route for Popular Keywords in the Last X Days -->  Line Chart
 @app.route('/popular_keywords_last_X_days/<int:days>', methods=['GET'])
 def popular_keywords_last_X_days(days):
     # Calculate the start date for the query
@@ -290,30 +326,38 @@ def popular_keywords_last_X_days(days):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-# Route for Articles by Published Month
+# Route for Articles by Published Month --> Column Chart
 @app.route('/articles_by_month/<int:year>/<int:month>', methods=['GET'])
 def articles_by_month(year, month):
-    # Calculate the start and end dates for the given year and month
-    start_date = datetime(year, month, 1)
-    if month == 12:
-        end_date = datetime(year + 1, 1, 1)  # Next year's January 1st
-    else:
-        end_date = datetime(year, month + 1, 1)  # Next month's 1st
+    # Convert the month to a two-digit format (e.g., "01" for January)
+    month_str = f"{month:02d}"
 
-    # Format dates to ISO 8601 strings
-    start_date_str = start_date.isoformat()
-    end_date_str = end_date.isoformat()
+    # Create a regular expression to match the publication_date
+    date_regex = f"^{year}-{month_str}"
 
     pipeline = [
-        {"$match": {"publication_date": {"$gte": start_date_str, "$lt": end_date_str}}},
+        {"$match": {"publication_date": {"$regex": date_regex}}},
         {"$group": {"_id": None, "count": {"$sum": 1}}},
-        {"$project": {"_id": 0, "year": year, "month": month, "articles_count": "$count"}}
+        {
+            "$project": {
+                "_id": 0,
+                "year": year,
+                "month": month,
+                "articles_count": "$count"
+            }
+        }
     ]
 
     result = list(collection.aggregate(pipeline))
+
+    # Ensure the result includes both year and month
+    if not result:
+        result = [{"year": year, "month": month, "articles_count": 0}]
+
     return jsonify(result)
 
-#Articles by Word Count Range
+
+#Articles by Word Count Range --> Histogram
 @app.route('/articles_by_word_count_range/<int:min>/<int:max>', methods=['GET'])
 def articles_by_word_count_range(min, max):
     pipeline = [
@@ -324,7 +368,7 @@ def articles_by_word_count_range(min, max):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-#Articles with Specific Keyword Count
+#Articles with Specific Keyword Count -->  Pie Chart
 @app.route('/articles_with_specific_keyword_count/<int:count>', methods=['GET'])
 def articles_with_specific_keyword_count(count):
     pipeline = [
@@ -335,7 +379,7 @@ def articles_with_specific_keyword_count(count):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-#Articles by Specific Date
+#Articles by Specific Date --> Line Chart
 @app.route('/articles_by_specific_date/<date>', methods=['GET'])
 def articles_by_specific_date(date):
     query = {"publication_date": {"$regex": f"^{date}"}}
@@ -343,7 +387,7 @@ def articles_by_specific_date(date):
     result = list(collection.find(query, projection))
     return jsonify({"date": date, "articles": result})
 
-#Articles Containing Specific Text
+#Articles Containing Specific Text -->  Bar Chart
 @app.route('/articles_containing_text/<text>', methods=['GET'])
 def articles_containing_text(text):
     # Create a regex pattern for case-insensitive search
@@ -364,7 +408,7 @@ def articles_containing_text(text):
     # Return the response in the desired format
     return jsonify({"text": text, "articles": result})
 
-#Articles with More than N Words
+#Articles with More than N Words --> Bar Chart
 @app.route('/articles_with_more_than/<int:word_count>', methods=['GET'])
 def articles_with_more_than(word_count):
     query = {"word_count": {"$gt": word_count}}
@@ -372,7 +416,7 @@ def articles_with_more_than(word_count):
     result = list(collection.find(query, projection))
     return jsonify({"more_than": word_count, "articles": result})
 
-#Articles Grouped by Coverage
+#Articles Grouped by Coverage --> stacked Bar Chart
 @app.route('/articles_grouped_by_coverage', methods=['GET'])
 def articles_grouped_by_coverage():
     pipeline = [
@@ -385,7 +429,7 @@ def articles_grouped_by_coverage():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-#Articles Published in Last X Hours
+#Articles Published in Last X Hours --> Bar Chart
 @app.route('/articles_last_X_hours/<int:hours>', methods=['GET'])
 def articles_last_X_hours(hours):
     end_time = datetime.utcnow()
@@ -408,7 +452,7 @@ def articles_last_X_hours(hours):
     # Return the response with article titles
     return jsonify({"last_hours": hours, "articles": result})
 
-#Articles by Length of Title
+#Articles by Length of Title --> Histogram
 @app.route('/articles_by_title_length', methods=['GET'])
 def articles_by_title_length():
     pipeline = [
