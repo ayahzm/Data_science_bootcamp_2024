@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+            font-size: 16px; /* Increased font size */
+        }
+        th {
+            background-color: #333;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f4f4f4;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+        thead {
+            border-bottom: 2px solid #333;
+        }
+        td {
+            font-size: 16px; /* Increased font size */
+        }
+        h1 {
+            color: #333;
+            margin: 20px auto;
+            font-size: 32px; /* Larger font size for the title */
+            font-weight: 700;
+            text-align: center;
+        }
+        #postIdInput, #fetchButton {
+            display: block;
+            width: 300px;
+            margin: 20px auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #postIdInput {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #fetchButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #fetchButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Article Details</h1>
+
+    <input type="text" id="postIdInput" placeholder="Enter post ID">
+    <button id="fetchButton">Fetch Article</button>
+
+    <table id="articlesTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publication Date</th>
+                <th>Word Count</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            const postId = document.getElementById('postIdInput').value.trim();
+            if (!postId) {
+                alert('Please enter a post ID.');
+                return;
+            }
+
+            fetch(`http://127.0.0.1:5000/article_details/${encodeURIComponent(postId)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json(); // Parse JSON from the response
+                })
+                .then(data => {
+                    const tableBody = document.querySelector("#articlesTable tbody");
+                    tableBody.innerHTML = ''; // Clear any existing data
+
+                    if (data && !data.error) {
+                        const row = document.createElement("tr");
+
+                        const titleCell = document.createElement("td");
+                        titleCell.textContent = data.title || 'N/A';
+                        row.appendChild(titleCell);
+
+                        const authorCell = document.createElement("td");
+                        authorCell.textContent = data.author || 'N/A';
+                        row.appendChild(authorCell);
+
+                        const dateCell = document.createElement("td");
+                        dateCell.textContent = new Date(data.publication_date).toLocaleDateString() || 'N/A';
+                        row.appendChild(dateCell);
+
+                        const wordCountCell = document.createElement("td");
+                        wordCountCell.textContent = data.word_count || 'N/A';
+                        row.appendChild(wordCountCell);
+
+                        const urlCell = document.createElement("td");
+                        urlCell.textContent = data.url || 'N/A';
+                        row.appendChild(urlCell);
+
+                        tableBody.appendChild(row);
+                    } else {
+                        tableBody.innerHTML = '<tr><td colspan="5">Article not found.</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching article:', error);
+                });
+        });
+    </script>
+
+</body>
+</html>

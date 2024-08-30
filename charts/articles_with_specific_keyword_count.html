@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles with Specific Keyword Count</title>
+    <!-- Include amCharts 5 library -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+</head>
+<body>
+
+    <h1>Articles with Specific Keyword Count</h1>
+
+    <!-- Form for user input -->
+    <form id="keywordCountForm">
+        <label for="count">Keyword Count:</label>
+        <input type="number" id="count" name="count" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Div element for amCharts -->
+    <div id="chartdiv" style="width: 100%; height: 500px;"></div>
+
+    <script>
+        // Function to fetch data from the Flask API and render the bar chart
+        async function fetchAndRenderChart(count) {
+            try {
+                // Fetch data from the Flask endpoint
+                const response = await fetch(`http://127.0.0.1:5000/articles_with_specific_keyword_count/${count}`);
+                const data = await response.json();
+
+                // Debugging: log the data to understand its structure
+                console.log('Fetched data:', data);
+
+                // Ensure data is in the expected format
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error('Data format is incorrect or empty');
+                }
+
+                // Prepare data for amCharts
+                const chartData = data.map(item => ({
+                    keyword_count: count, // Set the keyword count from the input
+                    articles_count: item.articles_count
+                }));
+
+                // Render the bar chart using amCharts 5
+                am5.ready(function() {
+
+                    // Create root element
+                    var root = am5.Root.new("chartdiv");
+
+                    // Set a theme
+                    root.setThemes([am5themes_Animated.new(root)]);
+
+                    // Create a XY chart
+                    var chart = root.container.children.push(am5xy.XYChart.new(root, {
+                        layout: root.verticalLayout
+                    }));
+
+                    // Create X and Y axes
+                    var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+                        categoryField: "keyword_count",
+                        renderer: am5xy.AxisRendererX.new(root, {
+                            minGridDistance: 30
+                        })
+                    }));
+
+                    var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+                        renderer: am5xy.AxisRendererY.new(root, {})
+                    }));
+
+                    // Create a series
+                    var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+                        name: "Articles",
+                        xAxis: xAxis,
+                        yAxis: yAxis,
+                        valueYField: "articles_count",
+                        categoryXField: "keyword_count"
+                    }));
+
+                    // Set data
+                    series.data.setAll(chartData);
+
+                    // Add labels
+                    series.columns.template.setAll({
+                        tooltipText: "{categoryX}: {valueY}",
+                        width: am5.percent(100),
+                        fillOpacity: 0.8
+                    });
+
+                    // Add animations
+                    series.appear(1000, 100);
+                });
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('keywordCountForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission from reloading the page
+
+            // Get user input
+            const count = document.getElementById('count').value;
+
+            // Fetch and render the chart based on user input
+            fetchAndRenderChart(count);
+        });
+    </script>
+
+</body>
+</html>

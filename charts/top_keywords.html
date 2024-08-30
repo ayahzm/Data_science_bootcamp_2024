@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Cloud Example</title>
+</head>
+<body>
+  <div id="wordclouddiv" style="width: 100%; height: 500px;"></div>
+  <!-- Load amCharts 5 core and WordCloud package -->
+  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/wc.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+  <!-- Your custom script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Fetch data from Flask endpoint
+      fetch('http://127.0.0.1:5000/top_keywords')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json(); // Parse JSON from the response
+        })
+        .then(data => {
+          console.log("Fetched data:", data);
+          createWordCloud(data); // Pass the data to the createWordCloud function
+        })
+        .catch(error => {
+          console.error("Error fetching data:", error);
+        });
+
+
+
+      function createWordCloud(chartData) {
+        console.log("Chart data:", chartData);
+
+        // Initialize amCharts word cloud
+        var root = am5.Root.new("wordclouddiv");
+
+        root.setThemes([am5themes_Animated.new(root)]);
+
+        var series = root.container.children.push(am5wc.WordCloud.new(root, {
+          categoryField: "keyword", // Use the field name as per your data
+          valueField: "occurrences"  // Use the field name as per your data
+        }));
+
+        series.data.setAll(chartData); // Set the data for the word cloud
+        series.appear(1000); // Add an appearance animation
+      }
+    });
+  </script>
+</body>
+</html>
