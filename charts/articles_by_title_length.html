@@ -1,76 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Articles With Specific Keyword Count</title>
+
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        #chartdiv {
-            width: 100%;
-            height: 500px;
-            margin: 20px auto;
-        }
-        #countInput {
-            display: block;
-            width: 300px;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        #searchButton {
-            display: block;
-            width: 300px;
-            margin: 10px auto;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        #searchButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
+ #chartdiv {
+  width: 100%;
+  height: 700px;
+}
+   </style>
+
+  <meta charset="UTF-8">
+  <title>Articles By Title Length</title>
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 </head>
 <body>
-<h1 style="text-align:center">Articles With Specific Keyword Count </h1>
 
-    <input type="text" id="countInput" placeholder="Enter keyword count">
-    <button id="searchButton">Search</button>
-    <div id="chartdiv"></div>
+   <div id="chartdiv"></div>
+<script>
 
-    <script>
-        let chart = null;
-
-        document.getElementById('searchButton').addEventListener('click', function() {
-            const keyword_count = document.getElementById('countInput').value.trim();
-            if (!keyword_count) {
-                alert('Please enter a year.');
-                return;
-            }
-
-            fetch(`http://127.0.0.1:5000/articles_with_specific_keyword_count/${encodeURIComponent(keyword_count)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json(); // Parse JSON from the response
-                })
-                .then(data => {
-                   console.log(data);
+am5.ready(function() {
+fetch('http://127.0.0.1:5000/articles_by_title_length')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json(); // Parse JSON from the response
+        })
+        .then(data => {
+        console.log(data);
 // Create root element
 // https://www.amcharts.com/docs/v5/getting-started/#Root_element
 var root = am5.Root.new("chartdiv");
@@ -119,7 +78,7 @@ xRenderer.grid.template.setAll({
 
 var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
   maxDeviation: 0.3,
-  categoryField: "keyword_count",
+  categoryField: "title_length",
   renderer: xRenderer,
   tooltip: am5.Tooltip.new(root, {})
 }));
@@ -141,7 +100,7 @@ var series = chart.series.push(am5xy.ColumnSeries.new(root, {
   yAxis: yAxis,
   valueYField: "articles_count",
   sequencedInterpolation: true,
-  categoryXField: "keyword_count",
+  categoryXField: "title_length",
   tooltip: am5.Tooltip.new(root, {
     labelText: "{valueY}"
   })
@@ -157,6 +116,42 @@ series.columns.template.adapters.add("stroke", function (stroke, target) {
 });
 
 
+// Set data
+<!--var data = [{-->
+<!--  country: "USA",-->
+<!--  value: 2025-->
+<!--}, {-->
+<!--  country: "China",-->
+<!--  value: 1882-->
+<!--}, {-->
+<!--  country: "Japan",-->
+<!--  value: 1809-->
+<!--}, {-->
+<!--  country: "Germany",-->
+<!--  value: 1322-->
+<!--}, {-->
+<!--  country: "UK",-->
+<!--  value: 1122-->
+<!--}, {-->
+<!--  country: "France",-->
+<!--  value: 1114-->
+<!--}, {-->
+<!--  country: "India",-->
+<!--  value: 984-->
+<!--}, {-->
+<!--  country: "Spain",-->
+<!--  value: 711-->
+<!--}, {-->
+<!--  country: "Netherlands",-->
+<!--  value: 665-->
+<!--}, {-->
+<!--  country: "South Korea",-->
+<!--  value: 443-->
+<!--}, {-->
+<!--  country: "Canada",-->
+<!--  value: 441-->
+<!--}];-->
+
 xAxis.data.setAll(data);
 series.data.setAll(data);
 
@@ -166,8 +161,8 @@ series.data.setAll(data);
 series.appear(1000);
 chart.appear(1000, 100);
 
-        });
-    </script>
+}); // end am5.ready()
+</script>
 
 </body>
 </html>
