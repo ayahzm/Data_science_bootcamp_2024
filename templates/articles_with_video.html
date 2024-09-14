@@ -1,0 +1,85 @@
+{% extends "base_template.html" %}
+
+{% block title %}Articles with Video{% endblock %}
+
+{% block content %}
+    <h1 style="text-align:center;">Articles with Video</h1>
+    <div id="chartdiv" style="width: 100%; height: 550px; margin: 20px auto;"></div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://127.0.0.1:5000/articles_with_video')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON from the response
+            })
+            .then(data => {
+                // Create root element
+                var root = am5.Root.new("chartdiv");
+
+                // Set themes
+                root.setThemes([am5themes_Animated.new(root)]);
+
+                // Create chart
+                var chart = root.container.children.push(
+                    am5percent.PieChart.new(root, {})
+                );
+
+                // Create series
+                var series = chart.series.push(
+                    am5percent.PieSeries.new(root, {
+                        name: "Series",
+                        valueField: "value",
+                        categoryField: "category"
+                    })
+                );
+
+                // Prepare data for the pie chart
+                const pieData = data.map(article => ({
+                    category: article.title,
+                    value: 1, // Dummy value, you can adjust as needed
+                    url: article.url
+                }));
+
+                // Set data
+                series.data.setAll(pieData);
+
+                // Make slices clickable and navigate to URL
+                series.slices.template.events.on("hit", function(ev) {
+                    const url = ev.target.dataItem.dataContext.url;
+                    if (url) {
+                        window.open(url, '_blank'); // Open URL in a new tab
+                    }
+                });
+
+                // Style slices
+                series.slices.template.setAll({
+                    tooltipText: "{category}", // Show the title in the tooltip
+                    fillOpacity: 0.8,
+                    strokeOpacity: 0
+                });
+
+                // Hide default value and percentage in tooltip
+                series.labels.template.setAll({
+                    text: "{category}",
+                    populateText: true
+                });
+
+                // Make stuff animate on load
+                series.appear(1000);
+                chart.appear(1000, 100);
+            })
+            .catch(error => {
+                console.error('Error fetching articles:', error);
+            });
+    });
+</script>
+{% endblock %}

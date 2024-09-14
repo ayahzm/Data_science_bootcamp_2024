@@ -1,0 +1,122 @@
+{% extends "base_template.html" %}
+
+{% block title %}Articles by Classes Chart{% endblock %}
+
+{% block content %}
+    <div id="chartdiv" style="width: 100%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+    am5.ready(function() {
+        fetch('http://127.0.0.1:5000/articles_by_classes')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON from the response
+            })
+            .then(data => {
+                console.log(data);
+
+                // Create root element
+                var root = am5.Root.new("chartdiv");
+
+                // Set themes
+                root.setThemes([am5themes_Animated.new(root)]);
+
+                // Create chart
+                var chart = root.container.children.push(
+                    am5xy.XYChart.new(root, {
+                        panX: true,
+                        panY: true,
+                        wheelX: "panX",
+                        wheelY: "zoomX",
+                        paddingLeft: 5,
+                        paddingRight: 5
+                    })
+                );
+
+                // Add cursor
+                var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+                cursor.lineY.set("visible", false);
+
+                // Create axes
+                var xRenderer = am5xy.AxisRendererX.new(root, {
+                    minGridDistance: 60,
+                    minorGridEnabled: true
+                });
+
+                var xAxis = chart.xAxes.push(
+                    am5xy.CategoryAxis.new(root, {
+                        maxDeviation: 0.3,
+                        categoryField: "category",
+                        renderer: xRenderer,
+                        tooltip: am5.Tooltip.new(root, {})
+                    })
+                );
+
+                xRenderer.grid.template.setAll({
+                    location: 1
+                });
+
+                var yAxis = chart.yAxes.push(
+                    am5xy.ValueAxis.new(root, {
+                        maxDeviation: 0.3,
+                        renderer: am5xy.AxisRendererY.new(root, {
+                            strokeOpacity: 0.1
+                        })
+                    })
+                );
+
+                // Create series
+                var series = chart.series.push(
+                    am5xy.ColumnSeries.new(root, {
+                        name: "Series 1",
+                        xAxis: xAxis,
+                        yAxis: yAxis,
+                        valueYField: "articles_count",
+                        sequencedInterpolation: true,
+                        categoryXField: "category",
+                        tooltip: am5.Tooltip.new(root, {
+                            labelText: "{valueY}"
+                        })
+                    })
+                );
+
+                series.columns.template.setAll({
+                    width: am5.percent(120),
+                    fillOpacity: 0.9,
+                    strokeOpacity: 0
+                });
+
+                series.columns.template.adapters.add("fill", (fill, target) => {
+                    return chart.get("colors").getIndex(series.columns.indexOf(target));
+                });
+
+                series.columns.template.adapters.add("stroke", (stroke, target) => {
+                    return chart.get("colors").getIndex(series.columns.indexOf(target));
+                });
+
+                series.columns.template.set("draw", function(display, target) {
+                    var w = target.getPrivate("width", 0);
+                    var h = target.getPrivate("height", 0);
+                    display.moveTo(0, h);
+                    display.bezierCurveTo(w / 4, h, w / 4, 0, w / 2, 0);
+                    display.bezierCurveTo(w - w / 4, 0, w - w / 4, h, w, h);
+                });
+
+                xAxis.data.setAll(data);
+                series.data.setAll(data);
+
+                // Make stuff animate on load
+                series.appear(1000);
+                chart.appear(1000, 100);
+            });
+    });
+</script>
+{% endblock %}

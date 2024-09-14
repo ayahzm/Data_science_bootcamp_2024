@@ -1,0 +1,122 @@
+{% extends "base_template.html" %}
+
+{% block title %}Articles by Word Count Range{% endblock %}
+
+{% block content %}
+    <h1>Articles by Word Count Range</h1>
+
+    <!-- Form for user input -->
+    <form id="wordCountForm">
+        <label for="min">Minimum Word Count:</label>
+        <input type="number" id="min" name="min" required>
+
+        <label for="max">Maximum Word Count:</label>
+        <input type="number" id="max" name="max" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Div element for amCharts -->
+    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+    // Function to fetch data from the Flask API and render the bar chart
+    async function fetchAndRenderChart(min, max) {
+        try {
+            // Fetch data from the Flask endpoint
+            const response = await fetch(`http://127.0.0.1:5000/articles_by_word_count_range/${min}/${max}`);
+            const data = await response.json();
+
+            // Prepare data for amCharts
+            const chartData = data.map(item => ({
+                word_count_range: item.word_count_range,
+                articles_count: item.articles_count
+            }));
+
+            // Render the bar chart using amCharts 5
+            am5.ready(function() {
+                // Create root element
+                var root = am5.Root.new("chartdiv");
+
+                // Set a theme
+                root.setThemes([am5themes_Animated.new(root)]);
+
+                // Create a chart
+                var chart = root.container.children.push(am5xy.XYChart.new(root, {
+                    panX: true,
+                    panY: true,
+                    wheelX: "panX",
+                    wheelY: "zoomX",
+                    pinchZoomX: true
+                }));
+
+                // Create X-axis (category axis)
+                var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+                    maxDeviation: 0.3,
+                    categoryField: "word_count_range",
+                    renderer: am5xy.AxisRendererX.new(root, {
+                        minGridDistance: 30
+                    }),
+                    tooltip: am5.Tooltip.new(root, {})
+                }));
+
+                // Create Y-axis (value axis)
+                var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+                    renderer: am5xy.AxisRendererY.new(root, {})
+                }));
+
+                // Create a series
+                var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+                    name: "Articles",
+                    xAxis: xAxis,
+                    yAxis: yAxis,
+                    valueYField: "articles_count",
+                    sequencedInterpolation: true,
+                    categoryXField: "word_count_range",
+                    tooltip: am5.Tooltip.new(root, {
+                        labelText: "{valueY}"
+                    })
+                }));
+
+                series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
+                series.columns.template.adapters.add("fill", function(fill, target) {
+                    return chart.get("colors").getIndex(series.columns.indexOf(target));
+                });
+
+                series.columns.template.adapters.add("stroke", function(stroke, target) {
+                    return chart.get("colors").getIndex(series.columns.indexOf(target));
+                });
+
+                // Set data
+                xAxis.data.setAll(chartData);
+                series.data.setAll(chartData);
+
+                // Make stuff animate on load
+                series.appear(1000);
+                chart.appear(1000, 100);
+            });
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    // Handle form submission
+    document.getElementById('wordCountForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission from reloading the page
+
+        // Get user input
+        const min = document.getElementById('min').value;
+        const max = document.getElementById('max').value;
+
+        // Fetch and render the chart based on user input
+        fetchAndRenderChart(min, max);
+    });
+</script>
+{% endblock %}

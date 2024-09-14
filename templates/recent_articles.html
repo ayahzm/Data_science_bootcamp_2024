@@ -1,0 +1,68 @@
+{% extends "base_template.html" %}
+
+{% block title %}Recent Articles{% endblock %}
+
+{% block content %}
+    <h1>Recent Articles</h1>
+    <table id="articlesTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publication Date</th>
+                <th>Word Count</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('http://127.0.0.1:5000/recent_articles')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Parse JSON from the response
+            })
+            .then(data => {
+                const tableBody = document.querySelector("#articlesTable tbody");
+                tableBody.innerHTML = ''; // Clear any existing data
+
+                data.forEach(article => {
+                    const row = document.createElement("tr");
+
+                    const titleCell = document.createElement("td");
+                    titleCell.textContent = article.title;
+                    row.appendChild(titleCell);
+
+                    const authorCell = document.createElement("td");
+                    authorCell.textContent = article.author;
+                    row.appendChild(authorCell);
+
+                    const dateCell = document.createElement("td");
+                    dateCell.textContent = new Date(article.publication_date).toLocaleDateString();
+                    row.appendChild(dateCell);
+
+                    const wordCountCell = document.createElement("td");
+                    wordCountCell.textContent = article.word_count;
+                    row.appendChild(wordCountCell);
+
+                    const descriptionCell = document.createElement("td");
+                    descriptionCell.textContent = article.description;
+                    row.appendChild(descriptionCell);
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching articles:', error);
+            });
+    });
+</script>
+{% endblock %}

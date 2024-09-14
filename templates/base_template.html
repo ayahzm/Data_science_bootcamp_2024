@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Al Mayadeen Scraper{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboardStyle.css') }}">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+</head>
+<body>
+    <div id="nav-bar">
+        <input id="nav-toggle" type="checkbox"/>
+        <div id="nav-header">
+            <img class="logo" src="{{ url_for('static', filename='images/Al_Mayadeen_logo.png') }}" alt="Al Mayadeen Logo"/> AlMayadeen Scraper
+            <label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
+            <hr/>
+        </div>
+        <div id="nav-content">
+            <div class="nav-button"><i class="fas fa-palette"></i><span>About</span></div><hr/>
+            <div class="nav-button"><i class="fas fa-images"></i><a href="http://127.0.0.1:5000/topkeywords">top keywords</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/topauthors">top authors</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbydate">articles by date</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbywordcount">articles by word count</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbylanguage">articles by language</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyclasses">articles by classes</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/recentarticles">recent articles</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbykeyword">articles by keyword</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyauthor">articles by author </a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/topclasses">top classes</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articledetails">article details</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithvideo">articles containing videos</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyyear">articles by year</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/longestarticles">longest articles</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/shortestarticles">shortest articles</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbykeywordcount">articles by keyword count</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswiththumbnail">articles with thumbnail</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesupdatedafterpublication">articles updated after publication</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbycoverage">articles by coverage</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/popularkeywordslastXdays">popular keywords last x days</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbymonth">articles by month</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbywordcountrange">articles by word count range</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithspecifickeywordcount">articles with specific keyword count</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyspecificdate">articles in specific date</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlescontainingtext">articles containing text</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithmorethan">articles with more than x words</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesgroupedbycoverage">articles grouped by coverage</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleslastXhours">articles last x hours</a></div>
+            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbytitlelength">articles by title length</a></div>
+        </div>
+    </div>
+
+    <!-- This block will be filled with dynamic content from child templates -->
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/wc.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    {% block script %}{% endblock %}
+</body>
+</html>

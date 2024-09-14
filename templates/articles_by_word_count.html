@@ -1,0 +1,115 @@
+{% extends "base_template.html" %}
+
+{% block title %}Articles By Word Count Chart{% endblock %}
+
+{% block content %}
+    <div id="chartdiv" style="margin-left:500px; margin-top:100px; width: 50%; height: 500px;"></div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script> <!-- Ensure am5xy is included -->
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<script>
+am5.ready(function() {
+
+    fetch('http://127.0.0.1:5000/articles_by_word_count')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json(); // Parse JSON from the response
+        })
+        .then(data => {
+            console.log(data); // Ensure data is logged for debugging
+
+            // Create root element
+            var root = am5.Root.new("chartdiv");
+
+            // Set themes
+            root.setThemes([
+              am5themes_Animated.new(root)
+            ]);
+
+            // Create chart
+            var chart = root.container.children.push(am5xy.XYChart.new(root, {
+              panX: true,
+              panY: true,
+              wheelX: "panX",
+              wheelY: "zoomX",
+              scrollbarX: am5.Scrollbar.new(root, { orientation: "horizontal" }),
+              scrollbarY: am5.Scrollbar.new(root, { orientation: "vertical" }),
+              pinchZoomX: true,
+              paddingLeft: 0
+            }));
+
+            // Add cursor
+            var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
+            cursor.lineY.set("visible", false);
+
+            // Create axes
+            var xRenderer = am5xy.AxisRendererX.new(root, {
+              minGridDistance: 15,
+              minorGridEnabled: true
+            });
+
+            xRenderer.labels.template.setAll({
+              rotation: -90,
+              centerY: am5.p50,
+              centerX: 0
+            });
+
+            xRenderer.grid.template.setAll({
+              visible: false
+            });
+
+            var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
+              maxDeviation: 0.3,
+              categoryField: "word_count",
+              renderer: xRenderer,
+              tooltip: am5.Tooltip.new(root, {})
+            }));
+
+            var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
+              maxDeviation: 0.3,
+              renderer: am5xy.AxisRendererY.new(root, {})
+            }));
+
+            // Create series
+            var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+              xAxis: xAxis,
+              yAxis: yAxis,
+              valueYField: "articles_count",
+              categoryXField: "word_count",
+              adjustBulletPosition: false,
+              tooltip: am5.Tooltip.new(root, {
+                labelText: "{valueY}"
+              })
+            }));
+            
+            series.columns.template.setAll({
+              width: 0.5
+            });
+
+            series.bullets.push(function() {
+              return am5.Bullet.new(root, {
+                locationY: 1,
+                sprite: am5.Circle.new(root, {
+                  radius: 5,
+                  fill: series.get("fill")
+                })
+              })
+            });
+
+            // Set data
+            xAxis.data.setAll(data);
+            series.data.setAll(data);
+
+            // Make stuff animate on load
+            series.appear(1000);
+            chart.appear(1000, 100);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
+</script>
+{% endblock %}
