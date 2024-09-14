@@ -24,7 +24,7 @@ collection = db["articles"]
 # Starting an ID counter
 article_id_counter = 1
 
-# Iterate over each file path
+
 for file_path in json_files:
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)

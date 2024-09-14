@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify,render_template
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 import re
@@ -9,6 +9,11 @@ app = Flask(__name__)
 client = MongoClient("mongodb://localhost:27017/")
 db = client['AlMayadeen']
 collection = db['articles']
+
+# Helper function to query articles by sentiment
+def get_articles_by_sentiment(sentiment):
+    articles = collection.find({"sentiment": sentiment})
+    return list(articles)  # Convert cursor to list
 
 # Route for Top Keywords
 @app.route('/top_keywords', methods=['GET'])
@@ -23,6 +28,14 @@ def top_keywords():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route('/')
+def about():
+    return render_template('base_template.html')
+
+@app.route('/topkeywords')
+def wordcloud():
+    return render_template('top_keywords.html')
+
 # Route for Top Authors --> bar chart
 @app.route('/top_authors', methods=['GET'])
 def top_authors():
@@ -34,7 +47,10 @@ def top_authors():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
-
+@app.route('/topauthors')
+def topauthors():
+    return render_template('top_authors.html')
+# Route for Articles by Date --> line chart
 # Route for Articles by Date --> line chart
 @app.route('/articles_by_date', methods=['GET'])
 def articles_by_date():
@@ -65,6 +81,10 @@ def articles_by_date():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route('/articlesbydate')
+def articlesbydate():
+    return render_template('articles_by_date.html')
+
 # Route for Articles by Word Count --> histogram
 @app.route('/articles_by_word_count', methods=['GET'])
 def articles_by_word_count():
@@ -76,6 +96,10 @@ def articles_by_word_count():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route('/articlesbywordcount')
+def articlesbywordcount():
+    return render_template('articles_by_word_count.html')
+
 # Route for Articles by Language --> pie chart
 @app.route('/articles_by_language', methods=['GET'])
 def articles_by_language():
@@ -86,6 +110,10 @@ def articles_by_language():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+@app.route('/articlesbylanguage')
+def articlesbylanguage():
+    return render_template('articles_by_language.html')
 
 # Route for Articles by Category --> Stacked Bar Chart
 @app.route('/articles_by_classes', methods=['GET'])
@@ -106,7 +134,9 @@ def articles_by_classes():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
-
+@app.route('/articlesbyclasses')
+def articlesbyclasses():
+    return render_template('articles_by_classes.html')
 
 # Route for Recent Articles --> Table
 @app.route('/recent_articles', methods=['GET'])
@@ -114,10 +144,13 @@ def recent_articles():
     pipeline = [
         {"$sort": {"publication_date": -1}},
         {"$limit": 10},
-        {"$project": {"_id": 0, "title": 1, "author":1,"publication_date":1, "word_count":1, "description":1, }}
+        {"$project": {"_id": 0, "title": 1, "author":1,"publication_date":1, "word_count":1, "description":1}}
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+@app.route('/recentarticles')
+def recentarticles():
+    return render_template('recent_articles.html')
 
 # Route for Articles by Keyword --> Tag Cloud
 @app.route('/articles_by_keyword/<keyword>', methods=['GET'])
@@ -126,6 +159,10 @@ def articles_by_keyword(keyword):
     projection = {"_id": 0, "title": 1}
     result = list(collection.find(query, projection))
     return jsonify(result)
+
+@app.route('/articlesbykeyword')
+def articlesbykeyword():
+    return render_template('articles_by_keyword.html')
 
 # Route for Articles by Author --> Bar Chart
 @app.route('/articles_by_author/<author_name>', methods=['GET'])
@@ -146,7 +183,9 @@ def articles_by_author(author_name):
     }
 
     return jsonify(response)
-
+@app.route('/articlesbyauthor')
+def articlesbyauthor():
+    return render_template('articles_by_author.html')
 
 # Route for Top Classes --> Pie Chart
 @app.route('/top_classes', methods=['GET'])
@@ -169,6 +208,9 @@ def top_classes():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route('/topclasses')
+def topclasses():
+    return render_template('top_classes.html')
 
 # Route for Article Details --> Table
 @app.route('/article_details/<post_id>', methods=['GET'])
@@ -179,13 +221,13 @@ def article_details(post_id):
     # Define the fields to include in the response
     projection = {
         "_id": 0,
-        "author":1,# Exclude the MongoDB internal _id field
+        "author":1,  # Exclude the MongoDB internal _id field
         "title": 1,
         "word_count":1,
         "keywords": 1,  # Include the article keywords
         "publication_date": 1,  # Include the publication date
-        "content": 1 ,
-        "url": 1# Include the article content (assuming you need this as well)
+        "content": 1,
+        "url": 1  # Include the article content (assuming you need this as well)
     }
 
     # Find the article document that matches the query
@@ -196,7 +238,9 @@ def article_details(post_id):
         return jsonify({"error": "Article not found"}), 404
 
     return jsonify(result)
-
+@app.route('/articledetails')
+def articledetails():
+    return render_template('article_details.html')
 
 # Route for Articles Containing Video --> Bar Chart
 @app.route('/articles_with_video', methods=['GET'])
@@ -205,6 +249,9 @@ def articles_with_video():
     projection = {"_id": 0, "title": 1, "url":1}
     result = list(collection.find(query, projection))
     return jsonify(result)
+@app.route('/articleswithvideo')
+def articleswithvideo():
+    return render_template('articles_with_video.html')
 
 # Route for Articles by Publication Year --> Bar Chart
 @app.route('/articles_by_year/<year>', methods=['GET'])
@@ -219,6 +266,9 @@ def articles_by_year(year):
     if not result:
         result = [{"year": year, "articles_count": 0}]
     return jsonify(result)
+@app.route('/articlesbyyear')
+def articlesbyyear():
+    return render_template('articles_by_year.html')
 
 # Route for Longest Articles --> Bar Chart
 @app.route('/longest_articles', methods=['GET'])
@@ -230,6 +280,9 @@ def longest_articles():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+@app.route('/longestarticles')
+def longestarticles():
+    return render_template('longest_articles.html')
 
 # Route for Shortest Articles --> Bar Chart
 @app.route('/shortest_articles', methods=['GET'])
@@ -241,6 +294,10 @@ def shortest_articles():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+@app.route('/shortestarticles')
+def shortestarticles():
+    return render_template('shortest_articles.html')
+
 
 # Route for Articles by Keyword Count --> Histogram
 @app.route('/articles_by_keyword_count', methods=['GET'])
@@ -253,6 +310,9 @@ def articles_by_keyword_count():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+@app.route('/articlesbykeywordcount')
+def articlesbykeywordcount():
+    return render_template('articles_by_keyword_count.html')
 
 # Route for Articles with Thumbnail --> Pie Chart
 @app.route('/articles_with_thumbnail', methods=['GET'])
@@ -260,6 +320,9 @@ def articles_with_thumbnail():
     query = {"thumbnail": {"$ne": None}}
     article_count = collection.count_documents(query)
     return jsonify({"count": article_count})
+@app.route('/articleswiththumbnail')
+def articleswiththumbnail():
+    return render_template('articles_with_thumbnail.html')
 
 # Route for Articles Updated After Publication --> Bar Chart
 @app.route('/articles_updated_after_publication', methods=['GET'])
@@ -275,7 +338,9 @@ def articles_updated_after_publication():
     }
 
     return jsonify(response_data)
-
+@app.route('/articlesupdatedafterpublication')
+def articlesupdatedafterpublication():
+    return render_template('articles_updated_after_publication.html')
 
 # Route for Articles by Coverage -->  Stacked Bar Chart
 @app.route('/articles_by_coverage/<coverage>', methods=['GET'])
@@ -300,7 +365,9 @@ def articles_by_coverage(coverage):
     }
 
     return jsonify(response_data)
-
+@app.route('/articlesbycoverage')
+def articlesbycoverage():
+    return render_template('articles_by_coverage.html')
 
 
 # Route for Popular Keywords in the Last X Days -->  Line Chart
@@ -325,6 +392,9 @@ def popular_keywords_last_X_days(days):
 
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+@app.route('/popularkeywordslastXdays')
+def popularkeywordslastXdays():
+    return render_template('popular_keywords_last_X_days.html')
 
 # Route for Articles by Published Month --> Column Chart
 @app.route('/articles_by_month/<int:year>/<int:month>', methods=['GET'])
@@ -356,7 +426,9 @@ def articles_by_month(year, month):
 
     return jsonify(result)
 
-
+@app.route('/articlesbymonth')
+def articlesbymonth():
+    return render_template('articles_by_month.html')
 #Articles by Word Count Range --> Histogram
 @app.route('/articles_by_word_count_range/<int:min>/<int:max>', methods=['GET'])
 def articles_by_word_count_range(min, max):
@@ -368,24 +440,44 @@ def articles_by_word_count_range(min, max):
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
+@app.route('/articlesbywordcountrange')
+def articlesbywordcountrange():
+    return render_template('articles_by_word_count_range.html')
+
 #Articles with Specific Keyword Count -->  Pie Chart
 @app.route('/articles_with_specific_keyword_count/<int:count>', methods=['GET'])
 def articles_with_specific_keyword_count(count):
     pipeline = [
         {"$match": {"$expr": {"$eq": [{"$size": "$keywords"}, count]}}},
-        {"$group": {"_id": None, "count": {"$sum": 1}}},
-        {"$project": {"_id": 0, "keyword_count": count, "articles_count": "$count"}}
+        {"$group": {
+            "_id": None,  # Group all matching documents together
+            "articles_count": {"$sum": 1}  # Count the number of articles
+        }},
+        {"$project": {
+            "_id": 0,  # Exclude _id
+            "keyword_count": {"$literal": count},  # Use $literal to set the keyword count
+            "articles_count": 1  # Include the articles count
+        }}
     ]
+
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+@app.route('/articleswithspecifickeywordcount')
+def articleswithspecifickeywordcount():
+    return render_template('articles_with_specific_keyword_count.html')
 
 #Articles by Specific Date --> Line Chart
 @app.route('/articles_by_specific_date/<date>', methods=['GET'])
 def articles_by_specific_date(date):
     query = {"publication_date": {"$regex": f"^{date}"}}
-    projection = {"_id": 0, "title": 1}
+    projection = {"_id": 0, "title": 1, "publication_date":1}
     result = list(collection.find(query, projection))
     return jsonify({"date": date, "articles": result})
+
+@app.route('/articlesbyspecificdate')
+def articlesbyspecificdate():
+    return render_template('articles_by_specific_date.html')
 
 #Articles Containing Specific Text -->  Bar Chart
 @app.route('/articles_containing_text/<text>', methods=['GET'])
@@ -407,6 +499,9 @@ def articles_containing_text(text):
 
     # Return the response in the desired format
     return jsonify({"text": text, "articles": result})
+@app.route('/articlescontainingtext')
+def articlescontainingtext():
+    return render_template('articles_containing_text.html')
 
 #Articles with More than N Words --> Bar Chart
 @app.route('/articles_with_more_than/<int:word_count>', methods=['GET'])
@@ -414,7 +509,16 @@ def articles_with_more_than(word_count):
     query = {"word_count": {"$gt": word_count}}
     projection = {"_id": 0, "title": 1}
     result = list(collection.find(query, projection))
-    return jsonify({"more_than": word_count, "articles": result})
+
+    # Count the number of articles
+    article_count = len(result)
+
+    # Return the response with the count and articles
+    return jsonify({"more_than": word_count, "article_count": article_count, "articles": result})
+
+@app.route('/articleswithmorethan')
+def articleswithmorethan():
+    return render_template('articles_with_more_than.html')
 
 #Articles Grouped by Coverage --> stacked Bar Chart
 @app.route('/articles_grouped_by_coverage', methods=['GET'])
@@ -428,6 +532,10 @@ def articles_grouped_by_coverage():
     ]
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
+
+@app.route('/articlesgroupedbycoverage')
+def articlesgroupedbycoverage():
+    return render_template('articles_grouped_by_coverage.html')
 
 #Articles Published in Last X Hours --> Bar Chart
 @app.route('/articles_last_X_hours/<int:hours>', methods=['GET'])
@@ -452,6 +560,10 @@ def articles_last_X_hours(hours):
     # Return the response with article titles
     return jsonify({"last_hours": hours, "articles": result})
 
+@app.route('/articleslastXhours')
+def articleslastXhours():
+    return render_template('articles_last_X_hours.html')
+
 #Articles by Length of Title --> Histogram
 @app.route('/articles_by_title_length', methods=['GET'])
 def articles_by_title_length():
@@ -464,7 +576,81 @@ def articles_by_title_length():
     result = list(collection.aggregate(pipeline))
     return jsonify(result)
 
-#Most Updated Articles (Needs update on the google doc)
+@app.route('/articlesbytitlelength')
+def articlesbytitlelength():
+    return render_template('articles_by_title_length.html')
+
+# Route for Articles by Sentiment (Positive) --> Pie Chart
+@app.route('/articles_by_sentiment/positive', methods=['GET'])
+def articles_by_sentiment_positive():
+    result = get_articles_by_sentiment("positive")
+    return jsonify(result)
+
+# Route for Articles by Sentiment (Neutral) --> Pie Chart
+@app.route('/articles_by_sentiment/neutral', methods=['GET'])
+def articles_by_sentiment_neutral():
+    result = get_articles_by_sentiment("neutral")
+    return jsonify(result)
+
+# Route for Articles by Sentiment (Negative) --> Pie Chart
+@app.route('/articles_by_sentiment/negative', methods=['GET'])
+def articles_by_sentiment_negative():
+    result = get_articles_by_sentiment("negative")
+    return jsonify(result)
+
+# Route for Articles by Sentiment (Mixed) --> Pie Chart
+@app.route('/articles_by_sentiment/mixed', methods=['GET'])
+def articles_by_sentiment_mixed():
+    result = get_articles_by_sentiment("mixed")
+    return jsonify(result)
+
+def get_articles_by_entity(entity):
+    query = {
+        "$or": [
+            {"entities.people": entity},
+            {"entities.places": entity},
+            {"entities.organizations": entity}
+        ]
+    }
+    articles = collection.find(query)
+    return list(articles)  # Convert cursor to list
+
+# Existing routes...
+
+# Route for Articles by Entity --> Example: /articles_by_entity/Israel
+@app.route('/articles_by_entity/<entity>', methods=['GET'])
+def articles_by_entity(entity):
+    result = get_articles_by_entity(entity)
+    return jsonify(result)
+
+@app.route('/articles_by_country/<country>', methods=['GET'])
+def articles_by_country(country):
+    query = {"entities.countries": country}
+    projection = {"_id": 0, "title": 1}
+    result = list(collection.find(query, projection))
+    return jsonify({"country": country, "articles": result})
+
+@app.route('/articles_by_organization/<organization>', methods=['GET'])
+def articles_by_organization(organization):
+    query = {"entities.organizations": organization}
+    projection = {"_id": 0, "title": 1}
+    result = list(collection.find(query, projection))
+    return jsonify({"organization": organization, "articles": result})
+
+@app.route('/articles_by_person/<person>', methods=['GET'])
+def articles_by_person(person):
+    query = {"entities.people": person}
+    projection = {"_id": 0, "title": 1}
+    result = list(collection.find(query, projection))
+    return jsonify({"person": person, "articles": result})
+
+@app.route('/articles_by_location/<location>', methods=['GET'])
+def articles_by_location(location):
+    query = {"entities.locations": location}
+    projection = {"_id": 0, "title": 1}
+    result = list(collection.find(query, projection))
+    return jsonify({"location": location, "articles": result})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
