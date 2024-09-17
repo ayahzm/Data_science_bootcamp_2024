@@ -3,7 +3,12 @@
 {% block title %}Articles by Language Chart{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="height: 500px; width: 50%; margin-top: 100px; margin-left: 500px;"></div>
+    <h1 style="text-align:center;">Articles by Language</h1>
+    <div id="chartdiv" style=" margin-left: 27%; margin-top:5%; width: 50%; height: 500px; max-width: 100%;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This donut chart illustrates that 100% of the articles from Al Mayadeen are published in Arabic. This reflects the platform’s focus on catering to its primary Arabic-speaking audience, emphasizing its commitment to delivering news and content specifically tailored for this linguistic and cultural demographic.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/articles_by_language')
             .then(response => {

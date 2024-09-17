@@ -3,11 +3,28 @@
 {% block title %}Shortest Articles Chart{% endblock %}
 
 {% block content %}
-    <div id="chartdiv"></div>
+<h1 style="text-align:center;">Top 10 Shortest articles</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This bar chart displays the top 10 shortest articles from Al Mayadeen, showing their respective word counts. Each bar represents an article, with the length of the bar indicating the number of words. This visualization highlights the shortest articles, providing insight into the briefest content published on the platform. It allows users to quickly identify which articles are the most concise, offering a perspective on the range of article lengths and the platform’s approach to shorter content.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/shortest_articles')
             .then(response => {

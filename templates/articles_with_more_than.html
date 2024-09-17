@@ -1,11 +1,16 @@
 {% extends "base_template.html" %}
 
-{% block title %}Articles by Word Count{% endblock %}
+{% block title %}Articles with more than x words{% endblock %}
 
 {% block content %}
-    <input type="number" id="yearInput" placeholder="Enter word count" min="1">
-    <button id="searchButton">Search</button>
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+<h1 style="text-align:center;">Articles with more than x words</h1>
+    <input type="number" id="yearInput" style="display: block; width: 300px; margin: 20px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;"  placeholder="Enter word count" min="1">
+    <button style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;" id="searchButton">Search</button>
+    <div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This bar chart displays the number of articles from Al Mayadeen that exceed a specific word count, as entered by the user. Each bar represents the count of articles with word counts greater than the specified threshold. This visualization provides insight into the volume of content that surpasses the given word count, highlighting the frequency of longer articles and offering a perspective on the depth of coverage in the platform’s reporting.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -14,6 +19,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     let chart = null;
 
     document.getElementById('searchButton').addEventListener('click', function() {

@@ -5,8 +5,12 @@
 {% block content %}
     <input type="text" id="yearInput" placeholder="Enter year" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
     <input type="text" id="monthInput" placeholder="Enter month (1-12)" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
-    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
-    <div id="chartdiv" style="height: 500px; width: 50%; margin-top: 100px; margin-left: 500px;"></div>
+    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+    <div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart displays the number of articles published by Al Mayadeen in the month specified by the user. Each data point represents the total count of articles for that particular month, offering a clear view of publishing activity. This visualization helps users understand the volume of content produced during the specified month, highlighting trends and fluctuations in article output over time.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -15,6 +19,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+      function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     document.getElementById('searchButton').addEventListener('click', function() {
         const year = document.getElementById('yearInput').value.trim();
         const month = document.getElementById('monthInput').value.trim();

@@ -3,14 +3,17 @@
 {% block title %}Articles Updated After Publication{% endblock %}
 
 {% block content %}
-    <h2>Enter Coverage</h2>
+    <h1 style="text-align:center;">Articles by Coverage</h1>
     <form id="coverageForm">
-        <label for="coverage">Coverage:</label>
-        <input type="text" id="coverage" name="coverage">
-        <button type="submit">Get Chart</button>
+        <input style="display: block; width: 300px; margin:0 auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;" type="text" id="coverage" name="coverage" placeholder="Enter coverage">
+        <button style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;" type="submit">Get Chart</button>
     </form>
 
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+   <div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart displays the number of articles from Al Mayadeen that match the coverage criteria specified by the user. Each data point represents the count of articles fitting the selected coverage parameters, such as geographic region, topic, or event. This visualization helps users assess the volume of content related to specific coverage areas, providing insight into how well the platform addresses particular subjects or regions as defined by their input.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -19,6 +22,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         // Event listener for the form submission
         document.getElementById('coverageForm').addEventListener('submit', function (e) {

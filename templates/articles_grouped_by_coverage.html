@@ -3,7 +3,12 @@
 {% block title %}Articles Grouped by Coverage{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="width: 50%; height: 800px; margin-left: 500px; margin-top: 100px;"></div>
+    <h1 style="text-align:center;">Articles Grouped by Coverage</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This bar chart visualizes the number of articles from Al Mayadeen grouped by their coverage areas, such as geographic regions, topics, or events. Each bar represents the count of articles within a specific coverage category, providing a clear view of the distribution of content across different subjects or regions. This chart helps users understand how articles are distributed according to their coverage, revealing which areas are most frequently reported on and highlighting the platform’s focus in various topics.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     document.addEventListener('DOMContentLoaded', function() {
         fetch('http://127.0.0.1:5000/articles_grouped_by_coverage')
             .then(response => {

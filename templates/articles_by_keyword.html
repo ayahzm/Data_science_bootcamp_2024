@@ -3,9 +3,14 @@
 {% block title %}Bubble Chart with Keywords{% endblock %}
 
 {% block content %}
+<h1 style="text-align:center;">Articles by Keyword</h1>
     <input type="text" id="keywordInput" placeholder="Enter keyword" style="display: block; width: 300px; margin: 20px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
-    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+    <div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: auto;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart displays the titles of articles from Al Mayadeen that include the keywords entered by the user. Each title represents an article relevant to the search terms, offering a visual overview of how often and in which contexts these keywords appear. This chart helps identify key topics and trends related to the search, showcasing the diversity of articles that address specific keywords and providing insight into the coverage and prominence of those terms in recent content.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -15,6 +20,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     let chart = null; // Variable to hold the chart instance
 
     document.getElementById('searchButton').addEventListener('click', function() {

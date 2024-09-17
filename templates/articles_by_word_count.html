@@ -3,7 +3,12 @@
 {% block title %}Articles By Word Count Chart{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="margin-left:500px; margin-top:100px; width: 50%; height: 500px;"></div>
+    <h1 style="text-align:center;">Articles by Word Count</h1>
+    <div id="chartdiv" style=" margin-left: 27%; margin-top:5%; width: 50%; height: 500px; max-width: 100%;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart illustrates the distribution of articles from Al Mayadeen based on word count. It highlights the variation in article lengths, ranging from short news updates to more in-depth analyses. The data provides insight into the typical length of content produced, with a higher concentration in certain word count ranges indicating the platform’s preference for either concise reporting or detailed coverage on specific topics.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -11,6 +16,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
 am5.ready(function() {
 
     fetch('http://127.0.0.1:5000/articles_by_word_count')

@@ -3,7 +3,12 @@
 {% block title %}Articles Thumbnail Distribution{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="width: 100%; height: 600px;"></div>
+<h1 style="text-align:center;"> Articles with Thumbnail</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This pie chart demonstrates that 100% of the articles from Al Mayadeen include thumbnails. Each slice of the chart is filled, indicating that every article in the dataset has an associated thumbnail image. This highlights the platform’s consistent use of visual elements to enhance article presentation and attract reader engagement. The chart underscores the importance of thumbnails in the platform’s content strategy, ensuring that all articles feature these visual assets.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/articles_with_thumbnail')
             .then(response => {

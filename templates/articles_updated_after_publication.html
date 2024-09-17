@@ -3,7 +3,12 @@
 {% block title %}Articles Updated After Publication{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+    <h1 style="text-align:center;">Articles Updated after publication</h1>
+   <div id="chartdiv"style="margin-left:22%; margin-top:5%; width: 60%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This pie chart illustrates the proportion of articles from Al Mayadeen that have been updated after their initial publication. Each slice of the chart represents the percentage of articles that received updates, providing insight into the platform's practice of revising and refreshing content. This visualization helps users understand how frequently articles are modified post-publication, reflecting the commitment to maintaining up-to-date and accurate information on the platform.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/articles_updated_after_publication')
             .then(response => {

@@ -3,13 +3,33 @@
 {% block title %}Top Authors{% endblock %}
 
 {% block content %}
-   <div id="chartdiv"style="margin-left:500px; margin-top:100px; width: 50%; height: 500px;"></div>
+<h1 style="text-align:center;">Top Authors</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart displays the top authors contributing to Al Mayadeen's articles.
+        It reveals which journalists or contributors have the most published pieces, highlighting their
+        influence and role in shaping the content. The distribution of authorship offers insight into the balance
+        of voices within the platform, with the most frequent contributors potentially driving key narratives or
+        covering specific areas of interest more extensively.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
 <script src="https://cdn.amcharts.com/lib/5/xy.js"></script> <!-- Include am5xy.js -->
 
 <script>
+   function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
 am5.ready(function() {
   fetch('http://127.0.0.1:5000/top_authors')
     .then(response => {

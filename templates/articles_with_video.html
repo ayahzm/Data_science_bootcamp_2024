@@ -5,6 +5,10 @@
 {% block content %}
     <h1 style="text-align:center;">Articles with Video</h1>
     <div id="chartdiv" style="width: 100%; height: 550px; margin: 20px auto;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This pie chart illustrates the distribution of article titles from Al Mayadeen that include videos. Each slice represents the proportion of articles with videos relative to the total number of articles. This visualization highlights how many articles incorporate multimedia elements such as videos, offering insight into the frequency and prominence of video content within the platform’s reporting. It provides a clear view of the role of video in enhancing the articles and engaging the audience.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -13,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     document.addEventListener('DOMContentLoaded', function() {
         fetch('http://127.0.0.1:5000/articles_with_video')
             .then(response => {

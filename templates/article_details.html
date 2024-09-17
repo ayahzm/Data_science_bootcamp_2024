@@ -3,31 +3,47 @@
 {% block title %}Article Details{% endblock %}
 
 {% block content %}
-    <div style="width: 50%; margin-left: 500px; margin-top: 100px; height:500px;">
-        <h1>Article Details</h1>
+    <div>
+        <h1 style="text-align:center;">Article Details</h1>
 
-        <input type="text" id="postIdInput" placeholder="Enter post ID">
-        <button id="fetchButton">Fetch Article</button>
+        <input type="text" id="postIdInput" style="display: block; width: 300px; margin: 20px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Enter post ID">
+        <button id="fetchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;">Fetch Article</button>
 
-        <table id="articlesTable">
-            <thead>
+        <table style="margin-left:22%; margin-top:2%; width: 60%; border-collapse: collapse; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" id="articlesTable">
+            <thead style="background: var(--navbar-dark-primary); color:white; border-bottom: 2px solid #ddd;">
                 <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publication Date</th>
-                    <th>Word Count</th>
-                    <th>Url</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Title</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Author</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Publication Date</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Word Count</th>
+                    <th style="padding: 10px; border: 1px solid #ddd;">Url</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Data will be inserted here -->
             </tbody>
         </table>
+        <div class="explanation-card" id="explanationCard">
+    <p>This table presents information about a specific article from Al Mayadeen, based on the post ID entered by the user. It includes key details such as the article's title, author, publication date, word count, and the url. This table allows users to quickly access comprehensive information about a particular article, facilitating a deeper understanding of its content and context.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
     </div>
 {% endblock %}
 
 {% block script %}
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
+
     document.getElementById('fetchButton').addEventListener('click', function() {
         const postId = document.getElementById('postIdInput').value.trim();
         if (!postId) {

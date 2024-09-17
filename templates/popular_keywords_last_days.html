@@ -3,9 +3,15 @@
 {% block title %}Popular Keywords Last X Days Chart{% endblock %}
 
 {% block content %}
-    <input type="number" id="yearInput" placeholder="Enter number of days" style="display: block; width: 300px; margin: 20px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
-    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
-    <div id="chartdiv" style="width: 100%; height: 500px; margin: 20px auto;"></div>
+<h1 style="text-align:center;">Popular Keywords Last X days</h1>
+    <input type="number" id="yearInput" placeholder="Enter number of days"  style="display: block; width: 300px; margin: 20px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
+    <button id="searchButton" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+    <div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This bar chart highlights the top 10 most popular keywords used in articles from Al Mayadeen over the past user-specified number of days. Each bar represents a keyword, with the height of the bar indicating the frequency of that keyword’s occurrence during the specified period. This visualization allows users to quickly identify which keywords have been most prominent in recent content, providing insights into current trends and topics of interest covered by the platform.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -14,6 +20,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+      function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     document.getElementById('searchButton').addEventListener('click', function() {
         const days = document.getElementById('yearInput').value.trim();
         if (!days) {

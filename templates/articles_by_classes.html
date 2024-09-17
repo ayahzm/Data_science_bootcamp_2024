@@ -3,7 +3,12 @@
 {% block title %}Articles by Classes Chart{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="width: 100%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+        <h1 style="text-align:center;">Articles by Classes</h1>
+    <div id="chartdiv" style=" margin-left: 27%; margin-top:5%; width: 50%; height: 500px; max-width: 100%;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart shows the distribution of articles from Al Mayadeen across different classes, with the majority focused on politics. This highlights the platform’s emphasis on political reporting and analysis, suggesting that political developments are a primary focus for their audience. Other categories, such as economy and society, are also represented, but to a lesser extent compared to the prominence of political content.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,18 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+     function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
+
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/articles_by_classes')
             .then(response => {

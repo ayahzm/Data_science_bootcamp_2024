@@ -3,21 +3,22 @@
 {% block title %}Articles by Word Count Range{% endblock %}
 
 {% block content %}
-    <h1>Articles by Word Count Range</h1>
+    <h1 style="text-align:center;">Articles by Word Count Range</h1>
 
     <!-- Form for user input -->
     <form id="wordCountForm">
-        <label for="min">Minimum Word Count:</label>
-        <input type="number" id="min" name="min" required>
+        <input type="number" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;" id="min" name="min" required placeholder="minimum word count">
 
-        <label for="max">Maximum Word Count:</label>
-        <input type="number" id="max" name="max" required>
+        <input type="number" id="max" style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;" name="max" required placeholder="maximum word count">
 
-        <button type="submit">Submit</button>
+        <button style="display: block; width: 300px; margin: 10px auto; padding: 10px; font-size: 16px; background: var(--navbar-dark-primary); color: #fff; border: none; border-radius: 4px; cursor: pointer;" type="submit">Submit</button>
     </form>
 
-    <!-- Div element for amCharts -->
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+<div id="chartdiv"style="margin-left:27%; margin-top:2%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart illustrates the number of articles from Al Mayadeen that fall within a specific word count range defined by the user. Each data point represents the count of articles whose word counts fall into the specified ranges, providing insight into the distribution of article lengths. This visualization helps users understand how frequently articles of varying lengths are published, offering a perspective on the typical length of content produced and how it varies within the defined range.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -26,6 +27,18 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
+
     // Function to fetch data from the Flask API and render the bar chart
     async function fetchAndRenderChart(min, max) {
         try {

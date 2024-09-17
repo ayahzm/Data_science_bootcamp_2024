@@ -3,25 +3,41 @@
 {% block title %}Recent Articles{% endblock %}
 
 {% block content %}
-    <h1>Recent Articles</h1>
-    <table id="articlesTable">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Publication Date</th>
-                <th>Word Count</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
-    </table>
+    <h1 style="text-align:center;">Recent Articles</h1>
+    <table style="margin-left:22%; margin-top:2%; width: 60%; border-collapse: collapse; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);" id="articlesTable">
+    <thead style="background: var(--navbar-dark-primary); color:white; border-bottom: 2px solid #ddd;">
+        <tr>
+            <th style="padding: 10px; border: 1px solid #ddd;">Title</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Author</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Publication Date</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Word Count</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
+        </tr>
+    </thead>
+    <tbody style="border-bottom: 1px solid #ddd;">
+        <!-- Data will be inserted here -->
+    </tbody>
+</table>
+
+<div class="explanation-card" id="explanationCard">
+    <p>This chart shows the distribution of articles from Al Mayadeen across different classes, with the majority focused on politics. This highlights the platform’s emphasis on political reporting and analysis, suggesting that political developments are a primary focus for their audience. Other categories, such as economy and society, are also represented, but to a lesser extent compared to the prominence of political content.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     document.addEventListener("DOMContentLoaded", function() {
         fetch('http://127.0.0.1:5000/recent_articles')
             .then(response => {

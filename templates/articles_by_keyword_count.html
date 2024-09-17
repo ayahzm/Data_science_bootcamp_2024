@@ -3,7 +3,12 @@
 {% block title %}Articles By Keyword Count Chart{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="width: 50%; height: 500px; margin-left: 500px; margin-top: 100px;"></div>
+<h1 style="text-align:center;">Articles by Keyword Count</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart illustrates the distribution of articles based on the number of keywords they contain. Each data point represents the count of articles within a specific range of keyword occurrences. This visualization helps users understand how frequently keywords are used across articles, highlighting trends in keyword density and the focus of content. By analyzing the keyword count, users can gain insights into the emphasis placed on particular topics and the distribution of keywords in the articles.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
     am5.ready(function() {
         fetch('http://127.0.0.1:5000/articles_by_keyword_count')
             .then(response => {

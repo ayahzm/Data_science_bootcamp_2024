@@ -3,7 +3,12 @@
 {% block title %}Articles By Title Length{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style="height: 700px; width: 50%; margin-top: 100px; margin-left: 500px;"></div>
+<h1 style="text-align:center;">Articles By Title Length</h1>
+   <div id="chartdiv"style="margin-left:27%; margin-top:5%; width: 50%; height: 500px;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This chart illustrates the distribution of articles from Al Mayadeen according to the length of their titles. Each data point represents the number of articles that fall into specific title length ranges, such as short, medium, or long titles. This visualization provides insight into how title length varies across articles, helping users understand trends in headline formatting and the distribution of title lengths within the platform’s content.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -12,6 +17,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+       function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
 am5.ready(function() {
     fetch('http://127.0.0.1:5000/articles_by_title_length')
         .then(response => {

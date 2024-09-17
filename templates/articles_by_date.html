@@ -3,7 +3,12 @@
 {% block title %}Articles by Date{% endblock %}
 
 {% block content %}
-    <div id="chartdiv" style=" margin-left: 500px; margin-top:100px; width: 50%; height: 500px; max-width: 100%;"></div>
+<h1 style="text-align:center;">Articles by Date</h1>
+    <div id="chartdiv" style=" margin-left: 27%; margin-top:5%; width: 50%; height: 500px; max-width: 100%;"></div>
+<div class="explanation-card" id="explanationCard">
+    <p>This line chart represents the number of articles published daily on Al Mayadeen's website over a specific time period. The fluctuations in the chart indicate variations in news activity, with peaks likely corresponding to significant events or breaking news. This visualization helps identify trends in publishing frequency, such as increases during key political events or slower periods with fewer updates, offering insights into the platform’s responsiveness to current affairs.</p>
+  </div>
+<div class="icon" id="infoIcon" onclick="toggleCard()">i</div>
 {% endblock %}
 
 {% block script %}
@@ -11,6 +16,17 @@
 <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 
 <script>
+    function toggleCard() {
+  const card = document.getElementById('explanationCard');
+  const icon = document.getElementById('infoIcon');
+  if (card.style.display === "block") {
+    card.style.display = "none";
+    icon.textContent = "i";
+  } else {
+    card.style.display = "block";
+    icon.textContent = "x";
+  }
+}
 am5.ready(function() {
     fetch('http://127.0.0.1:5000/articles_by_date')
         .then(response => response.json())
