@@ -1,9 +1,10 @@
-# 🌐 AlMayadeen News Scraper
+# 🌐 AlMayadeen News Scraper Dashboard
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A web scraper designed to extract and analyze articles from the AlMayadeen news website.
+A comprehensive web scraper and dashboard application designed to extract, analyze, and visualize news articles from the AlMayadeen news website. This project leverages web scraping, Flask APIs, MongoDB, and data visualization tools to present insightful trends in Middle Eastern news.
+
 <div align="center">
   <a href="https://github.com/ayahzm"><strong>View Profile</strong></a>
 </div>
@@ -12,24 +13,42 @@ A web scraper designed to extract and analyze articles from the AlMayadeen news 
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
+- [Steps Breakdown](#-steps-breakdown)
 - [Screenshots](#-screenshots)
 - [Presentations](#-presentations)
-- [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [Contact](#-contact)
 - [License](#-license)
 
 ## 🔍 Overview
 
-The AlMayadeen News Scraper is a tool that navigates through the AlMayadeen website's sitemap, extracts valuable information from articles, and stores the data into monthly structured JSON files. The scraper is designed to handle up to 10,000 articles efficiently. This project aims to facilitate data analysis and research on news content from the Middle East.
+The **AlMayadeen News Scraper Dashboard** is a robust solution for extracting, storing, analyzing, and visualizing news data from the AlMayadeen website. This project involves scraping up to 10,000 articles efficiently using Python, storing the data in MongoDB, and exposing it through a Flask-based API. The data is then visualized using amCharts5 in an interactive web-based dashboard, which provides detailed insights into the trends and patterns in Middle Eastern news content.
 
 ## 🚀 Key Features
 
-- **Intelligent Sitemap Parsing**: Efficiently extracts article URLs from monthly sitemaps
-- **Comprehensive Article Scraping**: Captures metadata, full text, and associated media information
-- **Structured Data Storage**: Organizes scraped data into year-month based JSON files
-- **Robust Error Handling**: Ensures smooth operation even when encountering network issues or unexpected page structures
-- **Configurable Limits**: Allows easy adjustment of scraping boundaries to suit different needs
+- **Sitemap Scraping**: Automatically fetches article URLs from AlMayadeen's sitemap, covering monthly archives.
+- **Article Data Extraction**: Scrapes article content, metadata, media, and other relevant information.
+- **JSON & MongoDB Storage**: Articles are stored locally in structured JSON files and later loaded into MongoDB for querying and analysis.
+- **Flask API with 30 Endpoints**: A Flask application exposes 30 API endpoints to perform queries on the scraped data (e.g., top keywords, top authors, recent articles, entity trends, etc.).
+- **Interactive Data Visualization**: Multiple charts are generated using amCharts5, providing visual insights such as article frequency over time, top authors, popular keywords, and sentiment trends.
+- **NLP Integration**: Implements natural language processing (NLP) techniques like entity recognition and sentiment analysis using Stanza to study trends across the articles.
+
+## 📊 Steps Breakdown
+
+### Step 1: Scraping Articles and Storing Data
+The first task was to scrape the articles from the AlMayadeen website. This was achieved by parsing the site's sitemap and extracting URLs for individual articles. The scraper navigates through the URLs, retrieving metadata (such as titles, authors, publication dates) and full article text. The data is then saved into structured JSON files, organized by year and month for easier access and management.
+
+### Step 2: Loading Data into MongoDB and Developing the Flask API
+Once the articles were scraped and saved, they were loaded into a MongoDB database for efficient querying and analysis. A Flask application was developed with 30 API endpoints to perform various queries on the data. These endpoints enable tasks such as retrieving the most frequent keywords, top authors, and articles by date, as well as studying more complex patterns like entity trends and sentiment analysis.
+
+### Step 3: Data Visualization with amCharts5
+To provide an interactive and insightful interface for viewing the results of the queries, charts were generated using amCharts5. Each API query result is represented visually on the dashboard, allowing users to easily explore trends like keyword frequency, author contributions, and changes in article content over time.
+
+### Step 4: Building the Dashboard with HTML, CSS, and Enhancing Flask with NLP
+All visualizations were integrated into a single, easy-to-use dashboard created with HTML and CSS. The Flask API was further enhanced by adding NLP functionality. This includes entity recognition and sentiment analysis, which provide deeper insights into the data by analyzing the topics and overall sentiment of the articles over time, powered by Stanza.
+
+### Step 5: NLP for Entity Recognition and Sentiment Analysis
+The project incorporates advanced NLP techniques to study the entities and sentiment across the articles. Using Stanza, the application identifies key entities (people, places, organizations) and analyzes the sentiment (positive, negative, neutral) of articles. These insights are presented visually in the dashboard, helping to understand the overarching trends and narratives within the news data.
 
 ## 📸 Screenshots
 
@@ -40,46 +59,40 @@ Here are some screenshots of the charts generated by the project:
 <h4>Top authors chart:</h4>
 
 ![Chart 2](./screenshots/Top%20Authors.png)
-<h4>articles by date chart:</h4>
+<h4>Articles by date chart:</h4>
 
 ![Chart 3](./screenshots/articles%20by%20date.png)
-<h4>articles by word count chart:</h4>
+<h4>Articles by word count chart:</h4>
 
 ![Chart 4](./screenshots/articles%20by%20word%20count.png)
-<h4>articles by classes chart:</h4>
+<h4>Articles by categories chart:</h4>
 
 ![Chart 5](./screenshots/articles%20by%20classes.png)
-<h4>recent articles chart:</h4>
+<h4>Recent articles chart:</h4>
 
 ![Chart 6](./screenshots/recent%20articles.png)
-<h4>top classes chart:</h4>
+<h4>Top categories chart:</h4>
 
 ![Chart 7](./screenshots/top%20classes.png)
-<h4>articles by keyword count chart:</h4>
+<h4>Articles by keyword count chart:</h4>
 
 ![Chart 8](./screenshots/articles%20by%20keyword%20count.png)
-<h4>popular keywords in the last x days chart:</h4>
+<h4>Popular keywords in the last X days chart:</h4>
 
-![Chart 9](./screenshots/popular%20keywords%20in%20last%20x%20days.png)
-<h4>article details chart:</h4>
+![Chart 9](./screenshots/popular%20keyword%20in%20last%20x%20days.png)
+<h4>Article details chart:</h4>
 
-![Chart 10](./screenshots/article%details.png)
-<h4>entity trends chart:</h4>
+![Chart 10](./screenshots/article%20details.png)
+<h4>Entity trends chart:</h4>
 
 ![Chart 11](./screenshots/entity%20trends.png)
 
 ## 📹 Presentations
 
-Below is the link to files in Google Drive containing the presentation videos:
-- Task 1 --> [View Video](https://drive.google.com/file/d/1bKMB_NH6u7gsqxA88hTcwSsOmfhzJVGh/view?usp=drive_link)
-- Task 2 --> [View Video](https://drive.google.com/file/d/1cOmY_PFFeugUombv0RPzXiKYp_DB-Zg4/view?usp=drive_link)
+Below are the links to videos showcasing the tasks:
 
-## 🛣 Roadmap
-
-- [ ] Implement multi-threading for faster scraping
-- [ ] Develop a user interface for easy configuration
-- [ ] Integrate with a database for more efficient storage
-- [ ] ... ... more coming soon
+- Task 1: Scraping Data --> [View Video](https://drive.google.com/file/d/1bKMB_NH6u7gsqxA88hTcwSsOmfhzJVGh/view?usp=drive_link)
+- Task 2: Loading Data & Flask API --> [View Video](https://drive.google.com/file/d/1cOmY_PFFeugUombv0RPzXiKYp_DB-Zg4/view?usp=drive_link)
 
 ## 🤝 Contributing
 
@@ -93,9 +106,8 @@ Contributions are welcomed! To make it happen:
 
 ## 👤 Contact
 
-**Aya Hazimeh**
-
-- Reach me: ahazimeh96@gmail.com
+**Aya Hazimeh**  
+Reach me: ahazimeh96@gmail.com
 
 ## 📄 License
 
