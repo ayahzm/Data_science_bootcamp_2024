@@ -1,6 +1,7 @@
 # 🌐 AlMayadeen News Scraper Dashboard
 
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/downloads/)
+[![HTML/CSS](https://img.shields.io/badge/HTML%2FCSS-%23E34F26.svg?style=flat&logo=html5&logoColor=white)](https://www.w3.org/html/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A comprehensive web scraper and dashboard application designed to extract, analyze, and visualize news articles from the AlMayadeen news website. This project leverages web scraping, Flask APIs, MongoDB, and data visualization tools to present insightful trends in Middle Eastern news.
