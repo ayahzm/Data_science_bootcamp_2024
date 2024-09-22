@@ -2,6 +2,7 @@ from flask import Flask, jsonify,render_template
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 import re
+from collections import Counter
 
 app = Flask(__name__)
 
@@ -29,8 +30,13 @@ def top_keywords():
     return jsonify(result)
 
 @app.route('/')
+def base():
+    return render_template('about.html')
+
+@app.route('/about')
 def about():
-    return render_template('base_template.html')
+    return render_template('about.html')
+
 
 @app.route('/topkeywords')
 def wordcloud():
@@ -394,7 +400,7 @@ def popular_keywords_last_X_days(days):
     return jsonify(result)
 @app.route('/popularkeywordslastXdays')
 def popularkeywordslastXdays():
-    return render_template('popular_keywords_last_X_days.html')
+    return render_template('popular_keywords_last_days.html')
 
 # Route for Articles by Published Month --> Column Chart
 @app.route('/articles_by_month/<int:year>/<int:month>', methods=['GET'])
@@ -615,7 +621,38 @@ def get_articles_by_entity(entity):
     articles = collection.find(query)
     return list(articles)  # Convert cursor to list
 
-# Existing routes...
+
+@app.route('/entity_trends', methods=['GET'])
+def entity_trends():
+    # Fetch all articles
+    articles = collection.find({}, {'entities': 1})
+
+    # Counter to track entity occurrences
+    entity_counter = Counter()
+
+    # Aggregate entities
+    for article in articles:
+        entities = article.get('entities', [])
+
+        for entity in entities:
+            # Check if entity is a dict with 'text'
+            if isinstance(entity, dict) and 'text' in entity:
+                entity_counter[entity['text']] += 1
+            # If it's a string, count it directly
+            elif isinstance(entity, str):
+                entity_counter[entity] += 1
+
+    # Get the top 10 entities sorted by count
+    top_entities = entity_counter.most_common(10)
+
+    # Convert to a list of dictionaries for JSON response
+    entity_trends = [{'entity': entity, 'count': count} for entity, count in top_entities]
+
+    return jsonify(entity_trends)
+
+@app.route('/entitytrends')
+def entitytrends():
+    return render_template('entity_trends.html')
 
 # Route for Articles by Entity --> Example: /articles_by_entity/Israel
 @app.route('/articles_by_entity/<entity>', methods=['GET'])
