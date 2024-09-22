@@ -1,5 +1,27 @@
+.about-section {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.about-section h1, .about-section h2 {
+    color: #333;
+}
+
+.about-section p, .about-section ul {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.about-section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+
 :root {
-  --background: #F0A868;
+  --background: #FFE5B4;
   --navbar-width: 260px;
   --navbar-width-min: 80px;
   --navbar-dark-primary: #18283b;
@@ -204,7 +226,8 @@ label[for=nav-toggle] {
 
 .nav-button {
   position: relative;
-  margin-left: 16px;
+  margin-left: 36px;
+  padding-left:35px;
   height: 54px;
   display: flex;
   align-items: center;
@@ -212,14 +235,28 @@ label[for=nav-toggle] {
   direction: ltr;
   cursor: pointer;
   z-index: 1;
-  transition: color 0.2s;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.nav-button:hover {
+    color: #8B4513; /* Brown color */
+}
+
+/* Highlight the active button */
+.nav-button.active {
+    background-color: #FFE5B4 /* Background for active button */
+    color: #8B4513; /* Brown text color */
+}
+
+/* Add hover effect to change the background slightly to emphasize it */
+.nav-button:hover {
+border-top-left-radius:60px;
+border-bottom-left-radius:60px;
+    background-color: #FFE5B4; /* Slightly darker shade of your background */
 }
 .nav-button span {
   transition: opacity 1s;
 }
-.nav-button .fas {
-  transition: min-width 0.2s;
-}
+
 .nav-button:nth-of-type(1):hover {
   color: var(--navbar-dark-primary);
 }
@@ -360,7 +397,49 @@ label[for=nav-footer-toggle] {
 }
 
 #chartdiv {
-    margin: 0 auto;
-    width: 80%;
-    height: 500px;
+    margin-left:500px;
+    width: 50%;
+    height: auto;
+}
+
+.explanation-card {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--navbar-dark-primary);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  transition: opacity 0.3s ease;
+}
+.explanation-card p{
+color:white;
+}
+
+.icon {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--navbar-dark-primary);
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* When the screen is smaller, hide the explanation card and show the icon */
+@media (max-width: 768px) {
+  .explanation-card {
+    display: none;
+  }
+
+  .icon {
+    display: block;
+  }
 }
