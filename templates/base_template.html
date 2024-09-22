@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Al Mayadeen Scraper{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboardStyle.css') }}">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
 </head>
 <body>
     <div id="nav-bar">
@@ -16,56 +15,45 @@
             <hr/>
         </div>
         <div id="nav-content">
-            <div class="nav-button"><i class="fas fa-palette"></i><a href="http://127.0.0.1:5000/about">About</a></div><hr/>
-            <div class="nav-button"><i class="fas fa-images"></i><a href="http://127.0.0.1:5000/topkeywords">top keywords</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/topauthors">top authors</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbydate">articles by date</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbywordcount">articles by word count</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbylanguage">articles by language</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyclasses">articles by classes</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/recentarticles">recent articles</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbykeyword">articles by keyword</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyauthor">articles by author </a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/topclasses">top classes</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articledetails">article details</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithvideo">articles containing videos</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyyear">articles by year</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/longestarticles">longest articles</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/shortestarticles">shortest articles</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbykeywordcount">articles by keyword count</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswiththumbnail">articles with thumbnail</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesupdatedafterpublication">articles updated after publication</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbycoverage">articles by coverage</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/popularkeywordslastXdays">popular keywords last x days</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbymonth">articles by month</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbywordcountrange">articles by word count range</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithspecifickeywordcount">articles with specific keyword count</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbyspecificdate">articles in specific date</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlescontainingtext">articles containing text</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleswithmorethan">articles with more than x words</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesgroupedbycoverage">articles grouped by coverage</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articleslastXhours">articles last x hours</a></div>
-            <div class="nav-button"><i class="fas fa-thumbtack"></i><a href="http://127.0.0.1:5000/articlesbytitlelength">articles by title length</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/about">About</a></div><hr/>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/topkeywords">Top Keywords</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/topauthors">Top Authors</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbydate">Articles by Date</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbywordcount">Articles by Word Count</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbylanguage">Articles by Language</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbyclasses">Articles by Classes</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/recentarticles">Recent Articles</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbykeyword">Articles by Keyword</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbyauthor">Articles by Author</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/topclasses">Top Classes</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articledetails">Article Details</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articleswithvideo">Articles Containing Videos</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbyyear">Articles by Year</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/longestarticles">Longest Articles</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/shortestarticles">Shortest Articles</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbykeywordcount">Articles by Keyword Count</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articleswiththumbnail">Articles with Thumbnail</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesupdatedafterpublication">Articles Updated after Publication</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbycoverage">Articles by Coverage</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/popularkeywordslastXdays">Popular Keywords Last X Days</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbymonth">Articles by Month</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbywordcountrange">Articles by Word Count Range</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articleswithspecifickeywordcount">Articles with Specific Keyword Count</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbyspecificdate">Articles in Specific Date</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlescontainingtext">Articles Containing Text</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articleswithmorethan">Articles with More than X Words</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesgroupedbycoverage">Articles Grouped by Coverage</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articleslastXhours">Articles Last X Hours</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/articlesbytitlelength">Articles by Title Length</a></div>
+            <div class="nav-button"><a href="http://127.0.0.1:5000/entitytrends">Entity Trends</a></div>
         </div>
     </div>
 
-    <!-- This block will be filled with dynamic content from child templates -->
     <div id="content">
         {% block content %}
         {% endblock %}
     </div>
 
-    <script>
-        document.querySelectorAll('.nav-button').forEach(button => {
-    button.addEventListener('click', function() {
-        // Remove active class from all buttons
-        document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
-        // Add active class to the clicked button
-        this.classList.add('active');
-    });
-});
-
-    </script>
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/wc.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
